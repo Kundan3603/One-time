@@ -1,1 +1,159 @@
-<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>LOVE LYRICS | webkaizen</title> <meta name="description" content="A romantic audio player with typewriter lyrics and photo gallery."> <link rel="stylesheet" href="style.css"> </head> <body> <!-- Hero Section --> <header class="hero"> <div class="hero-img-wrapper"> <img src="asset/1.jpg" alt="Romantic Scenery" class="hero-img"> </div> <div class="overlay"></div> <h1>Our Love..</h1> </header> <main class="container"> <!-- Lyrics --> <section class="lyrics-container" aria-live="polite"> <div id="lyrics-box" class="lyrics"></div> <span class="cursor">|</span> </section> <!-- Controls --> <section class="player-controls"> <!-- Time Display --> <div class="time-display"> <span id="current-time">0:00</span> / <span id="total-time">0:00</span> </div> <!-- Main Play Button --> <button id="play-btn" class="play-btn" aria-label="Play Song"> <!-- SVG Play Icon --> <svg id="icon-play" viewBox="0 0 24 24" width="32" height="32" fill="currentColor"> <path d="M8 5v14l11-7z" /> </svg> <!-- SVG Pause Icon (Hidden by default) --> <svg id="icon-pause" class="hidden" viewBox="0 0 24 24" width="32" height="32" fill="currentColor"> <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" /> </svg> </button> <!-- Audio Element (Hidden) --> <!-- Replace src with your actual song file --> <audio id="audio-player" preload="metadata"> <source src="Sambhal Ke Rakha Wo Phool Mera Tu - Finding Her _ Kushagra _ Hindi.mp3" type="audio/mpeg"> Your browser does not support the audio element. </audio> <!-- Fallback Toggle --> <div class="toggle-wrapper"> <label class="switch"> <input type="checkbox" id="typing-toggle" checked> <span class="slider round"></span> </label> <span class="toggle-label">Typewriter Effect</span> </div> </section> <!-- Photo Gallery --> <section class="gallery-section"> <h2>Memories</h2> <div class="gallery-grid"> <!-- Gallery Items --> <!-- Use 'data-full' for the high-res image shown in lightbox --> <div class="gallery-item"> <img src="asset/img1.avif" data-full="assets/img1.jpg" alt="Memory 1" loading="lazy"> <div class="caption">♡𝕀 𝕝𝕠𝕧𝕖 𝕪𝕠𝕦♡</div> </div> <div class="gallery-item"> <img src="asset/img2.avif" data-full="assets/img2.jpg" alt="Memory 2" loading="lazy"> <div class="caption">♡𝕀 𝕝𝕠𝕧𝕖 𝕪𝕠𝕦♡</div> </div> <div class="gallery-item"> <img src="asset/img3.jpg" data-full="assets/img3.jpg" alt="Memory 3" loading="lazy"> <div class="caption">♡𝕀 𝕝𝕠𝕧𝕖 𝕪𝕠𝕦♡</div> </div> <div class="gallery-item"> <img src="asset/img4.png" data-full="assets/img4.jpg" alt="Memory 4" loading="lazy"> <div class="caption">♡𝕀 𝕝𝕠𝕧𝕖 𝕪𝕠𝕦♡</div> </div> <div class="gallery-item"> <img src="asset/img5.jpg" data-full="assets/img5.jpg" alt="Memory 5" loading="lazy"> <div class="caption">♡𝕀 𝕝𝕠𝕧𝕖 𝕪𝕠𝕦♡</div> </div> <div class="gallery-item"> <img src="asset/img6.jpg" data-full="assets/img6.jpg" alt="Memory 6" loading="lazy"> <div class="caption">♡𝕀 𝕝𝕠𝕧𝕖 𝕪𝕠𝕦♡</div> </div> </div> <div class="design"><b>♡𝕀 𝕝𝕠𝕧𝕖 𝕪𝕠𝕦♡</b> </section> </main> <footer> </div><b> <p>ᯓ➤ To : My Love ❤️ </p></b> <p>ᯓ➤ From : Webkaizen</p> </footer> <!-- Lightbox Modal --> <div id="lightbox" class="lightbox" aria-hidden="true" role="dialog"> <button id="lb-close" class="lb-close" aria-label="Close Gallery">&times;</button> <button id="lb-prev" class="lb-nav lb-prev" aria-label="Previous Image">&#10094;</button> <div class="lb-content"> <img id="lb-img" src="" alt="Enlarged view"> <p id="lb-caption"></p> </div> <button id="lb-next" class="lb-nav lb-next" aria-label="Next Image">&#10095;</button> </div> <script src="script.js"></script> </body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>One Time - Proposal Moment</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        /* बॅकग्राउंड इमेज सेटिंग - कपल्स प्रपोजिंग */
+        .background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* इंटरनेटवरून घेतलेला प्रपोजलचा फोटो */
+            background-image: url('https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            filter: blur(3px) brightness(0.6); /* फोटो थोडा ब्लर आणि डार्क केलाय जेणेकरून टेक्स्ट वाचता येईल */
+            z-index: -1;
+        }
+
+        .lyrics-container {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            max-width: 80%;
+        }
+
+        #lyric-text {
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
+            opacity: 0; /* सुरुवातीला लपवलेले */
+            transition: opacity 1s ease-in-out, transform 1s ease;
+            transform: translateY(20px);
+        }
+
+        .heart-icon {
+            color: #ff4d4d;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            animation: beat 1s infinite;
+        }
+
+        @keyframes beat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* बटन स्टाईल */
+        #start-btn {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            background-color: #ff4081;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 64, 129, 0.4);
+            transition: transform 0.2s;
+        }
+
+        #start-btn:hover {
+            transform: scale(1.05);
+            background-color: #f50057;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background"></div>
+
+    <div class="lyrics-container">
+        <div id="start-screen">
+            <div class="heart-icon">❤️</div>
+            <h1>For You</h1>
+            <button id="start-btn" onclick="startShow()">Play "One Time"</button>
+        </div>
+
+        <div id="lyric-text"></div>
+    </div>
+
+    <audio id="audio-player" src="your-song.mp3"></audio>
+
+    <script>
+        // गाण्याचे लिरिक्स आणि टाइमिंग (सेकंदात)
+        const lyricsData = [
+            { text: "When I met you, girl, my heart went knock knock knock", delay: 1000 },
+            { text: "Now them butterflies in my stomach won't stop stop", delay: 5000 },
+            { text: "And even though it's a struggle love is all we got", delay: 9000 },
+            { text: "So we gonna keep keep climbin' 'til the mountain top", delay: 13000 },
+            { text: "Your world is my world", delay: 17000 },
+            { text: "And my fight is your fight", delay: 19000 },
+            { text: "My breath is your breath", delay: 21000 },
+            { text: "When you're hurt (I'm not right)", delay: 23000 },
+            { text: "You're my one love, My one heart", delay: 26000 },
+            { text: "My one life for sure", delay: 30000 },
+            { text: "Let me tell you one time", delay: 33000 },
+            { text: "(Girl, I love, girl, I love you)", delay: 35000 },
+            { text: "I'ma tell you one time", delay: 37000 },
+            { text: "(Girl, I love, girl, I love you)", delay: 39000 },
+            { text: "And I'ma be your one guy", delay: 41000 },
+            { text: "You'll be my number one girl, always makin' time for you", delay: 44000 },
+            { text: "I'ma tell you one time ❤️", delay: 48000 }
+        ];
+
+        const lyricElement = document.getElementById('lyric-text');
+        const startScreen = document.getElementById('start-screen');
+        const audio = document.getElementById('audio-player');
+
+        function startShow() {
+            // बटन लपवा
+            startScreen.classList.add('hidden');
+            
+            // ऑडिओ प्ले करण्याचा प्रयत्न (जर ऑडिओ फाईल असेल तर)
+            // audio.play().catch(e => console.log("Audio file not found or autoplay blocked"));
+
+            // लिरिक्स सुरु करा
+            lyricsData.forEach((line, index) => {
+                setTimeout(() => {
+                    updateLyric(line.text);
+                }, line.delay);
+            });
+        }
+
+        function updateLyric(text) {
+            // जुने टेक्स्ट फेड आऊट करा
+            lyricElement.style.opacity = '0';
+            lyricElement.style.transform = 'translateY(20px)';
+
+            setTimeout(() => {
+                // नवीन टेक्स्ट सेट करा आणि फेड इन करा
+                lyricElement.innerHTML = text;
+                lyricElement.style.opacity = '1';
+                lyricElement.style.transform = 'translateY(0)';
+            }, 500); // 0.5 सेकंद ट्रांजिशनसाठी
+        }
+    </script>
+
+</body>
+</html>
