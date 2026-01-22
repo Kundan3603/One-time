@@ -3,271 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>One Time - Justin Bieber - Synced Lyrics</title>
-
+    <title>One Time - Synced Lyrics</title>
     <style>
-        /* 1. Background & Layout */
-        body {
+        /* 1. बेसिक सेटिंग्स */
+        body, html {
+            height: 100%;
             margin: 0;
-            padding: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             font-family: 'Segoe UI', sans-serif;
-            color: white;
-            overflow: hidden;
-            position: relative;
-
-            /* 💍 Proposing Background Image */
-            background:
-                linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)),
-                url("img.jpg") no-repeat center center / cover;
+            overflow: hidden; /* स्क्रीन स्क्रोल होऊ नये */
         }
 
-        /* 2. Pulsing Heart Background */
-        .heart-bg {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 50vh;
-            height: 50vh;
-            z-index: 0;
-            opacity: 0.1;
-            animation: heartbeat 1.5s infinite ease-in-out;
-            pointer-events: none;
-        }
-
-        .heart-bg svg {
-            width: 100%;
+        /* 2. बॅकग्राउंड इमेज (कपल फोटो) */
+        .bg-image {
+            background-image: url('img.jpg');
             height: 100%;
-            fill: #ff4081;
+            background-position: center;
+            background-size: cover;
+            filter: brightness(0.4); /* फोटो थोडा डार्क केला जेणेकरून टेक्स्ट दिसेल */
+            position: absolute;
+            width: 100%;
+            z-index: -1;
         }
 
-        @keyframes heartbeat {
-            0% { transform: translate(-50%, -50%) scale(1); }
-            14% { transform: translate(-50%, -50%) scale(1.1); }
-            28% { transform: translate(-50%, -50%) scale(1); }
-            42% { transform: translate(-50%, -50%) scale(1.1); }
-            70% { transform: translate(-50%, -50%) scale(1); }
-        }
-
-        /* 3. Lyrics Container */
-        .lyrics-container {
-            position: relative;
-            z-index: 10;
-            width: 90%;
-            max-width: 600px;
-            height: 350px;
+        /* 3. मुख्य कंटेनर */
+        .container {
+            height: 100%;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            color: white;
             text-align: center;
-            perspective: 1000px;
         }
 
-        /* 4. Verse Styling */
-        .verse {
-            position: absolute;
-            width: 100%;
-            opacity: 0;
-            transform: translateY(50px) scale(0.9);
-            transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-            pointer-events: none;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .verse.active {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-
-        .verse.exit {
-            opacity: 0;
-            transform: translateY(-50px) scale(0.95);
-            filter: blur(5px);
-        }
-
-        .verse p {
-            margin: 0;
-            font-size: 1.5rem;
-            line-height: 1.4;
-            text-shadow: 0 4px 15px rgba(0,0,0,0.5);
-        }
-
-        .highlight {
-            color: #00d2ff;
-            font-weight: 600;
-            font-size: 1.7rem;
-        }
-
-        /* 5. Start Screen Overlay */
-        .start-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(0,0,0,0.9);
-            z-index: 100;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            cursor: pointer;
-            transition: opacity 0.5s;
-        }
-
-        .play-btn {
-            background: #ff4081;
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 1.2rem;
-            border-radius: 50px;
-            font-weight: bold;
-            box-shadow: 0 0 25px rgba(255, 64, 129, 0.6);
-            animation: pulse-btn 2s infinite;
-        }
-
-        @keyframes pulse-btn {
-            0% { box-shadow: 0 0 0 0 rgba(255, 64, 129, 0.7); }
-            70% { box-shadow: 0 0 0 20px rgba(255, 64, 129, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 64, 129, 0); }
-        }
-
-        .progress-bar-container {
-            position: absolute;
-            bottom: 30px;
+        /* 4. लिरिक्स बॉक्स */
+        .lyrics-box {
+            height: 50vh; /* स्क्रीनच्या अर्ध्या उंचीचा बॉक्स */
             width: 80%;
-            height: 4px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 2px;
-            z-index: 10;
+            overflow-y: hidden; /* मॅन्युअल स्क्रोल बंद */
+            mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
+            padding: 20px;
+            transition: all 0.5s ease;
         }
 
-        .progress-bar {
-            height: 100%;
-            background: #00d2ff;
-            width: 0%;
-            border-radius: 2px;
+        /* 5. लिरिक्स टेक्स्ट स्टाईल */
+        .line {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.5); /* इनॅक्टिव्ह ओळी फिकट दिसतील */
+            margin: 15px 0;
+            transition: transform 0.3s ease, color 0.3s ease, font-size 0.3s ease;
+            cursor: pointer;
+        }
+
+        /* 6. ऍक्टिव्ह ओळ (जी सध्या वाजत आहे) */
+        .line.active {
+            color: #ff4d4d; /* हायलाईट कलर (लाल/गुलाबी) */
+            font-size: 1.6rem; /* थोडी मोठी साईज */
+            font-weight: bold;
+            transform: scale(1.1);
+            text-shadow: 0 0 10px rgba(255, 77, 77, 0.8);
+        }
+
+        /* 7. ऑडिओ प्लेयर */
+        audio {
+            margin-top: 30px;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 30px;
         }
     </style>
 </head>
-
 <body>
 
-    <audio id="audioPlayer">
-        <source src="your-song.mp3" type="audio/mp3">
-    </audio>
+    <div class="bg-image"></div>
 
-    <div class="heart-bg">
-        <svg viewBox="0 0 32 29.6">
-            <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2
-            c6.1-9.3,16-11.8,16-21.2C32,3.8,28.2,0,23.6,0z"/>
-        </svg>
-    </div>
+    <div class="container">
+        <div class="lyrics-box" id="lyrics-container">
+            </div>
 
-    <div class="start-overlay" id="startScreen" onclick="playMusic()">
-        <button class="play-btn">▶ Play "One Time"</button>
-        <p style="margin-top: 15px; color: #bbb;">Click to start experience</p>
-    </div>
-
-    <div class="lyrics-container">
-
-        <div class="verse" id="v0">
-            <p>When I met you, girl, my heart went</p>
-            <p>Knock knock knock</p>
-        </div>
-
-        <div class="verse" id="v1">
-            <p>Now them butterflies in my stomach</p>
-            <p>Won't stop stop</p>
-        </div>
-
-        <div class="verse" id="v2">
-            <p>And even though it's a struggle</p>
-            <p>Love is all we got</p>
-            <p>So we gonna keep climbin' 'til the mountain top</p>
-        </div>
-
-        <div class="verse" id="v3">
-            <p>Your world is my world, and my fight is your fight</p>
-            <p>My breath is your breath, when you're hurt (I'm not right)</p>
-        </div>
-
-        <div class="verse" id="v4">
-            <p class="highlight">You're my one love, my one heart</p>
-            <p>My one life for sure</p>
-        </div>
-
-        <div class="verse" id="v5">
-            <p>Let me tell you one time (girl, I love you)</p>
-            <p>I'ma tell you one time (girl, I love you)</p>
-            <p class="highlight">And I'ma be your one guy</p>
-        </div>
-
-        <div class="verse" id="v6">
-            <p>You'll be my number one girl</p>
-            <p>Always makin' time for you</p>
-        </div>
-        
-       <div class="verse" id="v7">
-           <p>I'ma tell you one time ❤️ (girl, I love, girl, I love you)</p>
-           <p>I'ma tell you one time (girl, I love, girl, I love you)</p>
-        </div>
-
-    </div>
-
-    <div class="progress-bar-container">
-        <div class="progress-bar" id="progressBar"></div>
+        <audio id="audio-player" controls>
+            <source src="your-song.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
     </div>
 
     <script>
-        const audio = document.getElementById('audioPlayer');
-        const verses = document.querySelectorAll('.verse');
-        const progressBar = document.getElementById('progressBar');
-        const startScreen = document.getElementById('startScreen');
-
-        const timeData = [
-            { start: 0, end: 4.0 },
-            { start: 4.0, end: 8.0 },
-            { start: 8.0, end: 14.0 },
-            { start: 14.0, end: 27.0 },
-            { start: 27.0, end: 32.0 },
-            { start: 32.0, end: 41.0 },
-            { start: 41.0, end: 45.0 }
-            { start: 41.0, end: 49.0 }
+        // --- येथे तुम्ही लिरिक्स आणि त्यांची वेळ (सेकंदात) सेट करा ---
+        // time: गाण्यात ती ओळ कोणत्या सेकंदाला सुरू होते ते टाका.
+        const lyricsData = [
+            { time: 0, text: "🎵 (Music Intro) 🎵" },
+            { time: 0, text: "When I met you, girl, my heart went knock knock knock" },
+            { time: 03, text: "Now them butterflies in my stomach won't stop stop" },
+            { time: 06, text: "And even though it's a struggle love is all we got" },
+            { time: 09, text: "So we gonna keep keep climbin' 'til the mountain top" },
+            
+            { time: 13, text: "Your world is my world" },
+            { time: 16, text: "And my fight is your fight" },
+            { time: 20, text: "My breath is your breath" },
+            { time: 23, text: "When you're hurt (I'm not right)" },
+            
+            { time: 26, text: "You're my one love" },
+            { time: 29, text: "My one heart" },
+            { time: 31, text: "My one life for sure" },
+            
+            { time: 35, text: "Let me tell you one time (girl, I love, girl, I love you)" },
+            { time: 38, text: "I'ma tell you one time (girl, I love, girl, I love you)" },
+            { time: 40, text: "And I'ma be your one guy" },
+            { time: 45, text: "You'll be my number one girl, always makin' time for you" },
+            
+            { time: 47, text: "I'ma tell you one time (girl, I love, girl, I love you)" },
+            { time: 51, text: "I'ma tell you one time (girl, I love, girl, I love you)" }
         ];
 
-        function playMusic() {
-            startScreen.style.opacity = '0';
-            setTimeout(() => startScreen.style.display = 'none', 500);
-            audio.play().catch(() => {
-                alert("Please keep 'one_time.mp3' in the same folder!");
+        const lyricsContainer = document.getElementById('lyrics-container');
+        const audioPlayer = document.getElementById('audio-player');
+
+        // 1. सुरुवातीला सर्व ओळी HTML मध्ये तयार करणे
+        lyricsData.forEach((line, index) => {
+            const p = document.createElement('p');
+            p.classList.add('line');
+            p.innerText = line.text;
+            p.id = `line-${index}`;
+            
+            // क्लिक केल्यावर गाणे त्या वेळेवर नेणे (Optional Feature)
+            p.addEventListener('click', () => {
+                audioPlayer.currentTime = line.time;
+                audioPlayer.play();
             });
-        }
 
-        audio.ontimeupdate = function () {
-            const currentTime = audio.currentTime;
-            const duration = audio.duration || 55;
-            progressBar.style.width = (currentTime / duration) * 100 + '%';
+            lyricsContainer.appendChild(p);
+        });
 
+        // 2. ऑडिओ चालू असताना वेळ तपासणे (Main Logic)
+        audioPlayer.addEventListener('timeupdate', () => {
+            const currentTime = audioPlayer.currentTime;
+
+            // कोणती ओळ सध्या चालू आहे ते शोधणे
             let activeIndex = -1;
-            for (let i = 0; i < timeData.length; i++) {
-                if (currentTime >= timeData[i].start && currentTime < timeData[i].end) {
+            for (let i = 0; i < lyricsData.length; i++) {
+                if (currentTime >= lyricsData[i].time) {
                     activeIndex = i;
-                    break;
+                } else {
+                    break; 
                 }
             }
 
-            verses.forEach((verse, index) => {
-                verse.classList.remove('active', 'exit');
-                if (index === activeIndex) verse.classList.add('active');
-                else if (index < activeIndex) verse.classList.add('exit');
-            });
-        };
+            // क्लास अपडेट करणे
+            updateActiveLine(activeIndex);
+        });
+
+        function updateActiveLine(index) {
+            // जुन्या ओळींवरून active क्लास काढणे
+            const lines = document.querySelectorAll('.line');
+            lines.forEach(line => line.classList.remove('active'));
+
+            if (index !== -1) {
+                const activeLine = document.getElementById(`line-${index}`);
+                activeLine.classList.add('active');
+
+                // 3. ऑटो-स्क्रोलिंग (हायलाईट झालेली ओळ मध्यभागी ठेवण्यासाठी)
+                activeLine.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+            }
+        }
     </script>
 
 </body>
