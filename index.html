@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="mr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>One Time - Special Lyrics Webpage</title>
+    <title>One Time - Justin Bieber - Synced Lyrics</title>
+
     <style>
+        /* 1. Background & Layout */
         body {
             margin: 0;
             padding: 0;
@@ -12,122 +14,261 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Segoe UI', sans-serif;
+            color: white;
             overflow: hidden;
-            background-color: #000;
+            position: relative;
+
+            /* 💍 Proposing Background Image */
+            background:
+                linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)),
+                url("img.jpg") no-repeat center center / cover;
         }
 
-        /* बॅकग्राउंड पिक्चर सेटिंग */
-        .background-source {
+        /* 2. Pulsing Heart Background */
+        .heart-bg {
             position: absolute;
-            top: 0;
-            left: 0;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50vh;
+            height: 50vh;
+            z-index: 0;
+            opacity: 0.1;
+            animation: heartbeat 1.5s infinite ease-in-out;
+            pointer-events: none;
+        }
+
+        .heart-bg svg {
             width: 100%;
             height: 100%;
-            /* खालील 'your-image-source.jpg' च्या जागी तुमच्या फोटोची लिंक किंवा फाईलचे नाव टाका */
-            background-image: url('img.jpg'); 
-            background-size: cover;
-            background-position: center;
-            filter: brightness(0.5); /* फोटो थोडा डार्क केलाय जेणेकरून पांढरे टेक्स्ट उठून दिसेल */
-            z-index: -1;
-            transition: 1s;
+            fill: #ff4081;
         }
 
-        .container {
+        @keyframes heartbeat {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            14% { transform: translate(-50%, -50%) scale(1.1); }
+            28% { transform: translate(-50%, -50%) scale(1); }
+            42% { transform: translate(-50%, -50%) scale(1.1); }
+            70% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        /* 3. Lyrics Container */
+        .lyrics-container {
+            position: relative;
+            z-index: 10;
+            width: 90%;
+            max-width: 600px;
+            height: 350px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             text-align: center;
+            perspective: 1000px;
+        }
+
+        /* 4. Verse Styling */
+        .verse {
+            position: absolute;
+            width: 100%;
+            opacity: 0;
+            transform: translateY(50px) scale(0.9);
+            transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .verse.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .verse.exit {
+            opacity: 0;
+            transform: translateY(-50px) scale(0.95);
+            filter: blur(5px);
+        }
+
+        .verse p {
+            margin: 0;
+            font-size: 1.5rem;
+            line-height: 1.4;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .highlight {
+            color: #00d2ff;
+            font-weight: 600;
+            font-size: 1.7rem;
+        }
+
+        /* 5. Start Screen Overlay */
+        .start-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            cursor: pointer;
+            transition: opacity 0.5s;
+        }
+
+        .play-btn {
+            background: #ff4081;
             color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            font-weight: bold;
+            box-shadow: 0 0 25px rgba(255, 64, 129, 0.6);
+            animation: pulse-btn 2s infinite;
+        }
+
+        @keyframes pulse-btn {
+            0% { box-shadow: 0 0 0 0 rgba(255, 64, 129, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(255, 64, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 64, 129, 0); }
+        }
+
+        .progress-bar-container {
+            position: absolute;
+            bottom: 30px;
+            width: 80%;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
             z-index: 10;
         }
 
-        #lyric-display {
-            font-size: 2.2rem;
-            font-weight: bold;
-            text-shadow: 0px 4px 10px rgba(0, 0, 0, 0.8);
-            min-height: 100px;
-            padding: 0 20px;
-            opacity: 0;
-            transform: scale(0.9);
-            transition: all 0.8s ease-in-out;
-        }
-
-        .active {
-            opacity: 1 !important;
-            transform: scale(1) !important;
-        }
-
-        #play-button {
-            padding: 15px 40px;
-            font-size: 1.2rem;
-            cursor: pointer;
-            border: none;
-            border-radius: 30px;
-            background: linear-gradient(45deg, #ff416c, #ff4b2b);
-            color: white;
-            box-shadow: 0 5px 15px rgba(255, 75, 43, 0.4);
-            transition: 0.3s;
-        }
-
-        #play-button:hover {
-            transform: scale(1.1);
-        }
-
-        .hidden {
-            display: none;
+        .progress-bar {
+            height: 100%;
+            background: #00d2ff;
+            width: 0%;
+            border-radius: 2px;
         }
     </style>
 </head>
+
 <body>
 
-    <div class="background-source" id="bg"></div>
+    <audio id="audioPlayer">
+        <source src="your-song.mp3" type="audio/mp3">
+    </audio>
 
-    <div class="container">
-        <div id="start-screen">
-            <button id="play-button" onclick="startExperience()">Play Lyrics</button>
-        </div>
-        <div id="lyric-display"></div>
+    <div class="heart-bg">
+        <svg viewBox="0 0 32 29.6">
+            <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2
+            c6.1-9.3,16-11.8,16-21.2C32,3.8,28.2,0,23.6,0z"/>
+        </svg>
     </div>
 
-    <audio id="bg-music" src="your-song.mp3"></audio>
+    <div class="start-overlay" id="startScreen" onclick="playMusic()">
+        <button class="play-btn">▶ Play "One Time"</button>
+        <p style="margin-top: 15px; color: #bbb;">Click to start experience</p>
+    </div>
+
+    <div class="lyrics-container">
+
+        <div class="verse" id="v0">
+            <p>When I met you, girl, my heart went</p>
+            <p>Knock knock knock</p>
+        </div>
+
+        <div class="verse" id="v1">
+            <p>Now them butterflies in my stomach</p>
+            <p>Won't stop stop</p>
+        </div>
+
+        <div class="verse" id="v2">
+            <p>And even though it's a struggle</p>
+            <p>Love is all we got</p>
+            <p>So we gonna keep climbin' 'til the mountain top</p>
+        </div>
+
+        <div class="verse" id="v3">
+            <p>Your world is my world, and my fight is your fight</p>
+            <p>My breath is your breath, when you're hurt (I'm not right)</p>
+        </div>
+
+        <div class="verse" id="v4">
+            <p class="highlight">You're my one love, my one heart</p>
+            <p>My one life for sure</p>
+        </div>
+
+        <div class="verse" id="v5">
+            <p>Let me tell you one time (girl, I love you)</p>
+            <p>I'ma tell you one time (girl, I love you)</p>
+            <p class="highlight">And I'ma be your one guy</p>
+        </div>
+
+        <div class="verse" id="v6">
+            <p>You'll be my number one girl</p>
+            <p>Always makin' time for you</p>
+        </div>
+        
+       <div class="verse" id="v7">
+           <p>I'ma tell you one time ❤️ (girl, I love, girl, I love you)</p>
+           <p>I'ma tell you one time (girl, I love, girl, I love you)</p>
+        </div>
+
+    </div>
+
+    <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
 
     <script>
-        const lyrics = [
-            { t: "When I met you, girl, my heart went knock knock knock", d: 2000 },
-            { t: "Now them butterflies in my stomach won't stop stop", d: 5000 },
-            { t: "And even though it's a struggle love is all we got", d: 8500 },
-            { t: "So we gonna keep keep climbin' 'til the mountain top", d: 12000 },
-            { t: "Your world is my world", d: 15000 },
-            { t: "And my fight is your fight", d: 17500 },
-            { t: "My breath is your breath", d: 20000 },
-            { t: "When you're hurt (I'm not right)", d: 22000 },
-            { t: "You're my one love, my one heart", d: 25000 },
-            { t: "My one life for sure", d: 28000 },
-            { t: "Let me tell you one time...", d: 31000 },
-            { t: "(Girl, I love, girl, I love you)", d: 33500 },
-            { t: "I'ma tell you one time", d: 36000 },
-            { t: "(Girl, I love, girl, I love you)", d: 38500 },
-            { t: "And I'ma be your one guy", d: 41000 },
-            { t: "You'll be my number one girl", d: 44000 },
-            { t: "I'ma tell you one time ❤️", d: 47000 }
+        const audio = document.getElementById('audioPlayer');
+        const verses = document.querySelectorAll('.verse');
+        const progressBar = document.getElementById('progressBar');
+        const startScreen = document.getElementById('startScreen');
+
+        const timeData = [
+            { start: 0, end: 4.0 },
+            { start: 4.0, end: 8.0 },
+            { start: 8.0, end: 14.0 },
+            { start: 14.0, end: 27.0 },
+            { start: 27.0, end: 32.0 },
+            { start: 32.0, end: 41.0 },
+            { start: 41.0, end: 45.0 }
+            { start: 41.0, end: 49.0 }
         ];
 
-        function startExperience() {
-            const btn = document.getElementById('start-screen');
-            const display = document.getElementById('lyric-display');
-            const music = document.getElementById('bg-music');
-            
-            btn.classList.add('hidden');
-            music.play();
-
-            lyrics.forEach(line => {
-                setTimeout(() => {
-                    display.classList.remove('active');
-                    setTimeout(() => {
-                        display.innerHTML = line.t;
-                        display.classList.add('active');
-                    }, 100);
-                }, line.d);
+        function playMusic() {
+            startScreen.style.opacity = '0';
+            setTimeout(() => startScreen.style.display = 'none', 500);
+            audio.play().catch(() => {
+                alert("Please keep 'one_time.mp3' in the same folder!");
             });
         }
+
+        audio.ontimeupdate = function () {
+            const currentTime = audio.currentTime;
+            const duration = audio.duration || 55;
+            progressBar.style.width = (currentTime / duration) * 100 + '%';
+
+            let activeIndex = -1;
+            for (let i = 0; i < timeData.length; i++) {
+                if (currentTime >= timeData[i].start && currentTime < timeData[i].end) {
+                    activeIndex = i;
+                    break;
+                }
+            }
+
+            verses.forEach((verse, index) => {
+                verse.classList.remove('active', 'exit');
+                if (index === activeIndex) verse.classList.add('active');
+                else if (index < activeIndex) verse.classList.add('exit');
+            });
+        };
     </script>
+
 </body>
 </html>
