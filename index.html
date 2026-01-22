@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="mr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>One Time - Proposal with Butterflies</title>
+    <title>One Time - Special Lyrics Webpage</title>
     <style>
         body {
             margin: 0;
@@ -12,201 +12,120 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Arial', sans-serif;
             overflow: hidden;
             background-color: #000;
         }
 
-        /* बॅकग्राउंड इमेज */
-        .background {
+        /* बॅकग्राउंड पिक्चर सेटिंग */
+        .background-source {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('img.jpg');
+            /* खालील 'your-image-source.jpg' च्या जागी तुमच्या फोटोची लिंक किंवा फाईलचे नाव टाका */
+            background-image: url('img.jpg'); 
             background-size: cover;
             background-position: center;
-            filter: blur(2px) brightness(0.6);
+            filter: brightness(0.5); /* फोटो थोडा डार्क केलाय जेणेकरून पांढरे टेक्स्ट उठून दिसेल */
             z-index: -1;
+            transition: 1s;
         }
 
-        /* बटरफ्लाई स्टाईल */
-        .butterfly {
-            position: absolute;
-            width: 40px;
-            height: 40px;
-            z-index: 10;
-            pointer-events: none;
-        }
-
-        /* फुलपाखराचे पंख */
-        .butterfly::before, .butterfly::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            width: 20px;
-            height: 30px;
-            background: rgba(255, 200, 255, 0.8);
-            border-radius: 50% 50% 20% 50%;
-            box-shadow: 0 0 15px rgba(255, 105, 180, 0.6);
-            animation: flap 0.2s infinite alternate;
-        }
-
-        .butterfly::before {
-            left: 0;
-            transform-origin: right center;
-        }
-
-        .butterfly::after {
-            right: 0;
-            transform-origin: left center;
-            transform: scaleX(-1);
-            animation: flap-inverse 0.2s infinite alternate;
-        }
-
-        @keyframes flap {
-            from { transform: rotateY(0deg); }
-            to { transform: rotateY(70deg); }
-        }
-
-        @keyframes flap-inverse {
-            from { transform: scaleX(-1) rotateY(0deg); }
-            to { transform: scaleX(-1) rotateY(70deg); }
-        }
-
-        .lyrics-container {
+        .container {
             text-align: center;
             color: white;
-            padding: 20px;
-            max-width: 80%;
-            z-index: 20;
+            z-index: 10;
         }
 
-        #lyric-text {
-            font-size: 2.5rem;
+        #lyric-display {
+            font-size: 2.2rem;
             font-weight: bold;
-            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
+            text-shadow: 0px 4px 10px rgba(0, 0, 0, 0.8);
+            min-height: 100px;
+            padding: 0 20px;
             opacity: 0;
-            transition: opacity 1s ease-in-out, transform 1s ease;
-            transform: translateY(20px);
+            transform: scale(0.9);
+            transition: all 0.8s ease-in-out;
         }
 
-        .heart-icon {
-            color: #ff4d4d;
-            font-size: 3rem;
-            margin-bottom: 20px;
-            animation: beat 1s infinite;
+        .active {
+            opacity: 1 !important;
+            transform: scale(1) !important;
         }
 
-        @keyframes beat {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
-        }
-
-        #start-btn {
-            padding: 15px 30px;
+        #play-button {
+            padding: 15px 40px;
             font-size: 1.2rem;
-            background-color: #ff4081;
-            color: white;
-            border: none;
-            border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255, 64, 129, 0.4);
+            border: none;
+            border-radius: 30px;
+            background: linear-gradient(45deg, #ff416c, #ff4b2b);
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 75, 43, 0.4);
+            transition: 0.3s;
         }
 
-        .hidden { display: none; }
+        #play-button:hover {
+            transform: scale(1.1);
+        }
+
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
 
-    <div class="background"></div>
+    <div class="background-source" id="bg"></div>
 
-    <div class="lyrics-container">
+    <div class="container">
         <div id="start-screen">
-            <div class="heart-icon">❤️</div>
-            <h1>For You</h1>
-            <button id="start-btn" onclick="startShow()">Play "One Time"</button>
+            <button id="play-button" onclick="startExperience()">Play Lyrics</button>
         </div>
-        <div id="lyric-text"></div>
+        <div id="lyric-display"></div>
     </div>
 
-    <audio id="audio-player" src="your-song.mp3"></audio>
+    <audio id="bg-music" src="your-song.mp3"></audio>
 
     <script>
-        const lyricsData = [
-            { text: "When I met you, girl, my heart went knock knock knock", delay: 1000 },
-            { text: "Now them butterflies in my stomach won't stop stop", delay: 5000 },
-            { text: "And even though it's a struggle love is all we got", delay: 9000 },
-            { text: "So we gonna keep keep climbin' 'til the mountain top", delay: 13000 },
-            { text: "Your world is my world", delay: 17000 },
-            { text: "And my fight is your fight", delay: 19000 },
-            { text: "My breath is your breath", delay: 21000 },
-            { text: "When you're hurt (I'm not right)", delay: 23000 },
-            { text: "You're my one love, My one heart", delay: 26000 },
-            { text: "My one life for sure", delay: 30000 },
-            { text: "Let me tell you one time", delay: 33000 },
-            { text: "(Girl, I love, girl, I love you)", delay: 35000 },
-            { text: "I'ma tell you one time", delay: 37000 },
-            { text: "(Girl, I love, girl, I love you)", delay: 39000 },
-            { text: "And I'ma be your one guy", delay: 41000 },
-            { text: "You'll be my number one girl", delay: 44000 },
-            { text: "I'ma tell you one time ❤️", delay: 48000 }
+        const lyrics = [
+            { t: "When I met you, girl, my heart went knock knock knock", d: 2000 },
+            { t: "Now them butterflies in my stomach won't stop stop", d: 5000 },
+            { t: "And even though it's a struggle love is all we got", d: 8500 },
+            { t: "So we gonna keep keep climbin' 'til the mountain top", d: 12000 },
+            { t: "Your world is my world", d: 15000 },
+            { t: "And my fight is your fight", d: 17500 },
+            { t: "My breath is your breath", d: 20000 },
+            { t: "When you're hurt (I'm not right)", d: 22000 },
+            { t: "You're my one love, my one heart", d: 25000 },
+            { t: "My one life for sure", d: 28000 },
+            { t: "Let me tell you one time...", d: 31000 },
+            { t: "(Girl, I love, girl, I love you)", d: 33500 },
+            { t: "I'ma tell you one time", d: 36000 },
+            { t: "(Girl, I love, girl, I love you)", d: 38500 },
+            { t: "And I'ma be your one guy", d: 41000 },
+            { t: "You'll be my number one girl", d: 44000 },
+            { t: "I'ma tell you one time ❤️", d: 47000 }
         ];
 
-        function createButterfly() {
-            const b = document.createElement('div');
-            b.className = 'butterfly';
+        function startExperience() {
+            const btn = document.getElementById('start-screen');
+            const display = document.getElementById('lyric-display');
+            const music = document.getElementById('bg-music');
             
-            // रँडम पोझिशन आणि रंगाची झाक
-            const startX = Math.random() * window.innerWidth;
-            const startY = window.innerHeight + 50;
-            b.style.left = startX + 'px';
-            b.style.top = startY + 'px';
-            
-            // वेगवेगळ्या रंगाची फुलपाखरे
-            const colors = ['rgba(255, 182, 193, 0.8)', 'rgba(173, 216, 230, 0.8)', 'rgba(255, 255, 224, 0.8)'];
-            const randomColor = colors[Math.floor(Math.random() * colors.length)];
-            b.style.setProperty('--color', randomColor);
+            btn.classList.add('hidden');
+            music.play();
 
-            document.body.appendChild(b);
-
-            // उडण्याचे ॲनिमेशन (Natural flow)
-            let posX = startX;
-            let posY = startY;
-            let angle = Math.random() * Math.PI * 2;
-
-            const move = setInterval(() => {
-                posY -= 2; // वर जाणे
-                posX += Math.sin(posY / 30) * 2; // नागमोडी वळण
-                
-                b.style.top = posY + 'px';
-                b.style.left = posX + 'px';
-
-                if (posY < -100) {
-                    clearInterval(move);
-                    b.remove();
-                }
-            }, 30);
-        }
-
-        function startShow() {
-            document.getElementById('start-screen').classList.add('hidden');
-            
-            // फुलपाखरे निर्माण करणे सुरू करा
-            setInterval(createButterfly, 800);
-
-            lyricsData.forEach((line) => {
+            lyrics.forEach(line => {
                 setTimeout(() => {
-                    const el = document.getElementById('lyric-text');
-                    el.style.opacity = '0';
+                    display.classList.remove('active');
                     setTimeout(() => {
-                        el.innerHTML = line.text;
-                        el.style.opacity = '1';
-                        el.style.transform = 'translateY(0)';
-                    }, 500);
-                }, line.delay);
+                        display.innerHTML = line.t;
+                        display.classList.add('active');
+                    }, 100);
+                }, line.d);
             });
         }
     </script>
